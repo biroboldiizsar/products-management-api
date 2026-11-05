@@ -18,4 +18,24 @@ router.get("/", async (req, res)=>{
     }
 });
 
+router.get("/:id", async (req, res)=>{
+    try 
+    {
+        const [entry] = await db.select().from(products).where(eq(products.id, +request.params.id))
+        if(!entry) {
+            return res.status(404).json({
+                message: "Products not found",
+            })
+        }
+
+        return res.status(200).json(entry);
+    }
+    catch(err)
+    {
+        return res.status(500).json({
+            error: err.message || "Something went wrong"
+        })
+    }
+})
+
 module.exports = router;
